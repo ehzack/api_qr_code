@@ -2,6 +2,7 @@ var qr = require("qr-image");
 var encrypter = require("object-encrypter");
 var pdf = require("html-pdf");
 var fs = require("fs");
+const path = require("path");
 
 var engine = encrypter("zakaria123", { ttl: false });
 var options = {
@@ -37,18 +38,21 @@ module.exports = {
         }
       );
   },
-  rmDir: function (dirPath) {
+  rmDir: function (dirPath, dirPathPDF) {
     try {
-      var files = fs.readdirSync(dirPath);
+      fs.unlinkSync(dirPath);
+
+      fs.readdir(dirPathPDF, (err, files) => {
+        if (err) throw err;
+
+        for (const file of files) {
+          fs.unlink(path.join(dirPathPDF, file), (err) => {
+            if (err) throw err;
+          });
+        }
+      });
     } catch (e) {
       return;
     }
-    if (files.length > 0)
-      for (var i = 0; i < files.length; i++) {
-        var filePath = dirPath + "/" + files[i];
-        console.log(filePath);
-        var result = fs.unlinkSync(filePath);
-        console.log(result);
-      }
   },
 };

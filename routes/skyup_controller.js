@@ -30,19 +30,10 @@ router.post("/generate_qr_code", async function (req, res, next) {
 
     await zip(`${__dirname}/result`, `${__dirname}/result.zip`);
 
-    fs.readdir(`${__dirname}/result`, (err, files) => {
-      for (const file of files) {
-        console.log(path.join(`${__dirname}/result`, file));
-        fs.unlink(path.join(`${__dirname}/result`, file), (err) => {
-          if (err) {
-            console.log("errrrrrror");
-          } else {
-            console.log("Done");
-          }
-        });
-      }
-    });
     res.sendFile(`${__dirname}/result.zip`);
+    return next(
+      Functions.rmDir(`${__dirname}/result.zip`, `${__dirname}/result`)
+    );
   } catch (e) {
     console.error(e);
     return next(Boom.badImplementation("Unable to generate QR"));
