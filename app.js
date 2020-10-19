@@ -5,6 +5,7 @@ var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 require("dotenv").config();
 const Functions = require("./routes/shared/index");
+var cors = require("cors");
 
 var indexRouter = require("./routes/index");
 var skyupControllerRouter = require("./routes/skyup_controller");
@@ -19,6 +20,7 @@ app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(cors());
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/", indexRouter);
@@ -26,7 +28,6 @@ app.use("/skyupControllerRouter", skyupControllerRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
-  Functions.rmDir(`${__dirname}/result.zip`);
   // next(createError(404));
 });
 

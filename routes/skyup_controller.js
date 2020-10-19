@@ -30,10 +30,13 @@ router.post("/generate_qr_code", async function (req, res, next) {
 
     await zip(`${__dirname}/result`, `${__dirname}/result.zip`);
 
-    res.sendFile(`${__dirname}/result.zip`);
-    return next(
-      Functions.rmDir(`${__dirname}/result.zip`, `${__dirname}/result`)
-    );
+    res.setHeader("Content-Type", "application/zip");
+    res.setHeader("Content-Disposition", "attachment; filename=result.zip");
+    res.download(`${__dirname}/result.zip`);
+    res.on("finish", function () {
+      Functions.rmDir(`${__dirname}/result.zip`, `${__dirname}/result`);
+    });
+    next();
   } catch (e) {
     console.error(e);
     return next(Boom.badImplementation("Unable to generate QR"));
