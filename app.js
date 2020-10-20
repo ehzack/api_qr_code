@@ -6,7 +6,7 @@ var logger = require("morgan");
 require("dotenv").config();
 const Functions = require("./routes/shared/index");
 var cors = require("cors");
-
+var bodyParser = require("body-parser");
 var indexRouter = require("./routes/index");
 var skyupControllerRouter = require("./routes/skyup_controller");
 
@@ -15,7 +15,8 @@ var app = express();
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "jade");
-
+app.use(bodyParser.json({ limit: "10mb", extended: true }));
+app.use(bodyParser.urlencoded({ limit: "10mb", extended: true }));
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));

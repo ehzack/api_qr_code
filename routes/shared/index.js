@@ -3,11 +3,13 @@ var encrypter = require("object-encrypter");
 var pdf = require("html-pdf");
 var fs = require("fs");
 const path = require("path");
+const util = require("util");
+const fsRemove = require("fs-extra");
 
 var engine = encrypter("zakaria123", { ttl: false });
 var options = {
-  height: "1107px",
-  width: "900px",
+  timeout: "100000",
+  type: "pdf",
 };
 
 module.exports = {
@@ -22,36 +24,37 @@ module.exports = {
     return engine.decrypt(data);
   },
 
-  generate_pdf: async function (qr_code, payload) {
+  generate_pdf: async function (file_name, qr_code, payload) {
     var html = require("../../template/index")(qr_code, payload);
-
-    pdf
-      .create(html, options)
-      .toFile(
-        `${__dirname}/../result/${payload.first_name.replace(
-          / /g,
-          ""
-        )}_${payload.last_name.replace(/ /g, "")}.pdf`,
-        function (err, ress) {
-          if (err) return console.log(err);
-          return "done";
-        }
-      );
+    return new Promise((resolve) => {
+      pdf
+        .create(html, options)
+        .toFile(
+          `${__dirname}/../${file_name}/${payload.first_name.replace(
+            / /g,
+            ""
+          )}_${payload.last_name.replace(/ /g, "")}.pdf`,
+          (err, res) => {
+            resolve(res);
+          }
+        );
+    });
   },
-  rmDir: function (dirPath, dirPathPDF) {
+  create_folder: async function (namefolder) {
+    if (!fs.existsSync(namefolder)) {
+      await fs.mkdirSync(namefolder);
+      return namefolder + 1;
+    } else {
+      await fs.mkdirSync(namefolder + 1);
+      return namefolder + 1;
+    }
+  },
+  rmDir: async function (dirPath, dirPathPDF) {
     try {
       fs.unlinkSync(dirPath);
-
-      fs.readdir(dirPathPDF, (err, files) => {
-        if (err) throw err;
-
-        for (const file of files) {
-          fs.unlink(path.join(dirPathPDF, file), (err) => {
-            if (err) throw err;
-          });
-        }
-      });
+      await fsRemove.remove(dirPathPDF);
     } catch (e) {
+      console.log(e);
       return;
     }
   },

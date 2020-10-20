@@ -19,26 +19,32 @@ router.post("/generate_qr_code", async function (req, res, next) {
   if (error) {
     return next(Boom.badRequest(error.details[0].message));
   }
+  const { data } = value;
 
+  let nameFolder =
+    data[0].first_name.split(" ").join("") +
+    "_" +
+    data[0].last_name.split(" ").join("");
   try {
-    const { data } = value;
-
     for (let i = 0; i < data.length; i++) {
       let qr_code = Functions.generateQrCodeImage(data[i]);
-      await Functions.generate_pdf(qr_code, data[i]);
+      let res = await Functions.generate_pdf(nameFolder, qr_code, data[i]);
     }
-
-    await zip(`${__dirname}/result`, `${__dirname}/result.zip`);
-
-    res.setHeader("Content-Type", "application/zip");
-    res.setHeader("Content-Disposition", "attachment; filename=result.zip");
-    res.download(`${__dirname}/result.zip`);
+    await zip(`${__dirname}/${nameFolder}`, `${__dirname}/${nameFolder}.zip`);
+    res.download(`${__dirname}/${nameFolder}.zip`);
     res.on("finish", function () {
-      Functions.rmDir(`${__dirname}/result.zip`, `${__dirname}/result`);
+      Functions.rmDir(
+        `${__dirname}/${nameFolder}.zip`,
+        `${__dirname}/${nameFolder}`
+      );
     });
     next();
   } catch (e) {
     console.error(e);
+    Functions.rmDir(
+      `${__dirname}/routes/${nameFolder}.zip`,
+      `${__dirname}/routes/${nameFolder}`
+    );
     return next(Boom.badImplementation("Unable to generate QR"));
   }
 });
