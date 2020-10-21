@@ -12,6 +12,19 @@ var options = {
   type: "pdf",
 };
 
+const nodemailer = require("nodemailer");
+
+const { SMPT_AUTH_USER, SMPT_AUTH_PASS } = require("./../../config");
+
+let transport = nodemailer.createTransport({
+  host: "smtp.gmail.com",
+  port: 465,
+  //secure: true, // use SSL
+  auth: {
+    user: SMPT_AUTH_USER,
+    pass: SMPT_AUTH_PASS,
+  },
+});
 module.exports = {
   generateQrCodeImage: function (user) {
     var hashData = engine.encrypt(user);
@@ -49,13 +62,23 @@ module.exports = {
       return namefolder + 1;
     }
   },
-  rmDir: async function (dirPath, dirPathPDF) {
+  rmDir: async function (dirPathPDF) {
     try {
-      fs.unlinkSync(dirPath);
+      console.log("Remove File **************", dirPathPDF);
       await fsRemove.remove(dirPathPDF);
     } catch (e) {
       console.log(e);
       return;
     }
+  },
+  sendMail: function (message) {
+    transport.sendMail(message, function (err, info) {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log("done");
+        console.log(info);
+      }
+    });
   },
 };
