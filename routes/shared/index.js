@@ -10,6 +10,8 @@ var engine = encrypter("zakaria123", { ttl: false });
 var options = {
   timeout: "100000",
   type: "pdf",
+  height: "1107px",
+  width: "900px",
 };
 
 const nodemailer = require("nodemailer");
