@@ -12,7 +12,10 @@ const path = require("path");
 
 async function main(nameFolder, data, email) {
   for (let i = 0; i < data.length; i++) {
-    let qr_code = Functions.generateQrCodeImage(data[i]);
+    let qr_code = Functions.generateQrCodeImage({
+      user_id: data[i].id_user,
+      role: data[i].role,
+    });
     let res = await Functions.generate_pdf(nameFolder, qr_code, data[i]);
   }
   await zip(`${__dirname}/${nameFolder}`, `${__dirname}/zip/${nameFolder}.zip`);
