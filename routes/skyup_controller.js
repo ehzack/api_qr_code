@@ -13,8 +13,11 @@ const path = require("path");
 async function main(nameFolder, data, email) {
   for (let i = 0; i < data.length; i++) {
     let qr_code = Functions.generateQrCodeImage({
-      user_id: data[i].id_user,
+      id_user: data[i].id_user,
       role: data[i].role,
+      id_user: data[i].id_user,
+      first_name: data[i].first_name,
+      last_name: data[i].last_name,
     });
     let res = await Functions.generate_pdf(nameFolder, qr_code, data[i]);
   }
