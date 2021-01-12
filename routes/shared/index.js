@@ -27,6 +27,11 @@ let transport = nodemailer.createTransport({
     pass: SMPT_AUTH_PASS,
   },
 });
+
+console.log({
+  user: SMPT_AUTH_USER,
+  pass: SMPT_AUTH_PASS,
+});
 module.exports = {
   generateQrCodeImage: function (user) {
     var hashData = engine.encrypt(user);
