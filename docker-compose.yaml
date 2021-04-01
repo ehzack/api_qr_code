@@ -1,0 +1,15 @@
+version: "3"
+
+services:
+  qr_code_ai:
+    build:
+      context: .
+    ports:
+      - "3001:3001"
+
+    environment:
+      PORT: 3001
+      SMPT_AUTH_USER: "fadaa.al.ouloum@gmail.com"
+      SMPT_AUTH_PASS: "fadaa.al.ouloum@fadaa.al.ouloum"
+      FromEmail: "info@fadaaalouloume.com"
+      DOMAINNAME: "https://qrcode.ecole-fadaa-alouloume.com/"

@@ -10,8 +10,6 @@ var engine = encrypter("zakaria123", { ttl: false });
 var options = {
   timeout: "100000",
   type: "pdf",
-  height: "1107px",
-  width: "900px",
 };
 
 const nodemailer = require("nodemailer");
@@ -46,6 +44,7 @@ module.exports = {
 
   generate_pdf: async function (file_name, qr_code, payload) {
     var html = require("../../template/index")(qr_code, payload);
+
     return new Promise((resolve) => {
       pdf
         .create(html, options)

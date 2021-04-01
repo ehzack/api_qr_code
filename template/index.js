@@ -2,153 +2,129 @@ const { required } = require("joi");
 
 module.exports = function (qr_code, payload) {
   var logo = require("./fadaa_alouloumeLogo");
+  var dictionary = require("./dictionary");
+
   if (payload.school == "ecoletaiba") {
     logo = require("./ecoleTaibaLogo");
   }
 
   let html = `
-    <style>
-    @import url(https://fonts.googleapis.com/css?family=Montserrat:400,700);
-    @import url(//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css);
-    body {
-         background: #e2e2e2;
-         width: 98%;
-         height: 100vh;
+
+  <style>
+  body {
+      background: #e2e2e2;
+  }
+  h6{
+    font-size:12px
+  }
+  p{
+    font-size:11px
+  }
+   body .card {
+      height: 5.4cm;
+      width: 8.6cm;
+      background: white;
+      position: absolute;
+      left: 0;
+      right: 0;
+      margin: auto;
+      top: 0;
+      bottom: 0;
+      border-radius: 5px;
+      -webkit-border-radius: 10px;
+      -moz-border-radius: 10px;
+      box-shadow: 0px 20px 30px 3px rgba(0, 0, 0, 0.55);
+  }
+    
+  body #one {
+      border-top-right-radius: 5px;
+      border-bottom-right-radius: 5px;
+      float: left;
+      width: 62%;
+      height: 5.4cm;
+      padding: 9px;
+  }
+    
+  body #two {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-top-right-radius: 5px;
+      border-bottom-right-radius: 5px;
+      float: left;
+      width: 30%;
+      /*margin-right: -1px;*/
+      height: 100%;
+  }
+    
+  #oneone {
+      display: flex;
+      float: left;
+      width: 30%;
+      text-align: center;
+      justify-content: center;
+      
     }
-     body .card {
-         width: 800px;
-         height: 400px;
-         background: white;
-         position: absolute;
-         left: 0;
-         right: 0;
-         margin: auto;
-         top: 0;
-         bottom: 0;
-         border-radius: 10px;
-         -webkit-border-radius: 10px;
-         -moz-border-radius: 10px;
-         box-shadow: 0px 20px 30px 3px rgba(0, 0, 0, 0.55);
-    }
-     body .card_left {
-         width: 40%;
-         height: 400px;
-         float: left;
-         overflow: hidden;
-         background: transparent;
-    }
-     body .card_left img {
-         width: 100%;
-         height: 75%;
-         border-radius: 10px 0 0 10px;
-         -webkit-border-radius: 10px 0 0 10px;
-         -moz-border-radius: 10px 0 0 10px;
-         position: relative;
-         top: 12%;
-    }
-     body .card_right {
-         width: 60%;
-         float: left;
-         background: white;
-         height: 400px;
-         border-radius: 0 10px 10px 0;
-         -webkit-border-radius: 0 10px 10px 0;
-         -moz-border-radius: 0 10px 10px 0;
-    }
-     body .card_right h1 {
-         color: black;
-         font-family: 'Montserrat', sans-serif;
-         font-weight: 600;
-         text-align: left;
-         font-size: 40px;
-         margin: 30px 0 0 0;
-         padding: 0 0 0 40px;
-         letter-spacing: 1px;
-    }
-     body .card_right__details ul {
-         list-style-type: none;
-         padding: 0 0 0 40px;
-         margin: 10px 0 0 0;
-    }
-     body .card_right__details ul li {
-         color: #454f66;
-         display: inline;
-         font-family: 'Montserrat', sans-serif;
-         font-weight: 400;
-         font-size: 16px;
-         padding: 0 40px 0 0;
-    }
-     body .card_right__review p {
-         color: black;
-         font-family: 'Montserrat', sans-serif;
-         font-size: 12px;
-         padding: 0 40px 0 40px;
-         letter-spacing: 1px;
-         margin: 10px 0 10px 0;
-         line-height: 20px;
-    }
-     body .card_right__review a {
-         text-decoration: none;
-         font-family: 'Montserrat', sans-serif;
-         font-size: 14px;
-         padding: 0 0 0 40px;
-         color: #ffda00;
-         margin: 0;
-    }
-    </style>
-    <div class="card">
-        <div class="card_left">
-          <img src="data:image/png;base64, ${qr_code}"/>
-        </div>
-        <div class="card_right">
-          <div class="card_right__details">
-            <br />
-            <br />
-            <ul>
-              <li style="font-weight: bold;"> année scolaire : ${
+    
+  body #twotwo {
+      float: left;
+      width: 70%;
+      height: 8%;
+  }
+
+  p {
+      line-height: 17px;
+  }
+
+</style>
+
+  <!-- 8.6*5.4 -->
+
+  <div class="card">
+      <div id="one">
+          <div id="oneone">
+              <img src="${logo}" style="width: 90%;" />
+          </div>
+          <div id="twotwo">
+              <h6 style="color: grey; padding-left: 3px; text-align: center;"> année scolaire : ${
                 payload.schoolYear
-              }</li>
-              <li style="float: right;"><img src="${logo}" style="width: 100px; height=100px;"/></li>
-            </ul>
+              } </h6>
           </div>
-          
-          <h1>${payload.first_name} ${payload.last_name}</h1>
-          <div class="card_right__details">
-            <ul>
-              <li>${payload.role}</li>
-            </ul>
-            ${
-              payload.role == "student"
-                ? `<ul>
-              <li>${payload.registers[0].classroom.name}</li>
-            </ul>
-          
-            <ul>
-              <li>Transport: ${payload.transport}</li>
-            </ul>
-            <ul>
-              <li>Cantine: ${payload.canteen}</li>
-            </ul>
-            `
-                : ""
-            }
-        ${
-          payload.role == "teacher"
-            ? `<ul>
-              <li> (Si Enseignant) - Status: ${payload.permanent}</li>
-            </ul>`
-            : ""
-        }
-            <div class="card_right__review">
-              
-            </div>
+          <div style=" float: left; text-align: left; padding-left: 3px; padding-top: 30px;">
+              <p> <b> ${payload.first_name} - ${payload.last_name} </b> <br>
+               ${dictionary[payload.role]} <br>
+               ${
+                 payload.role == "student"
+                   ? `
+                  ${payload.registers[0].classroom.name} <br />
+                  Transport: ${payload.transport} <br />
+                  Cantine: ${payload.canteen} <br />
+                  `
+                   : ""
+               }
+                ${
+                  payload.role == "teacher"
+                    ? `
+                  Status: ${payload.permanent}
+                  `
+                    : ""
+                }
+              </p>
+              <!-- <p> <b> Nom - P rénom </b> <br>
+               Role <br>
+               Classroom Name <br>
+               Transport: Oui/Non <br>
+               Cantine: Oui/Non <br>
+               Status: permanant / Non
+              </p> -->
           </div>
-        </div>
       </div>
-
-
-
-
+      <div id="two">
+          <div class="oneone" style="margin-top:55%">
+              <img src="data:image/png;base64, ${qr_code}" style="width: 100%; " />
+          </div>
+      </div>
+    </div>
 
     `;
 
